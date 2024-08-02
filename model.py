@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
-import os
 
 
 class LinearQNet(nn.Module):
@@ -17,15 +16,6 @@ class LinearQNet(nn.Module):
         x = self.linear2(x)
 
         return x
-
-    def save(self, file_name="model.pth"):
-        model_folder_path = "./model"
-
-        if not os.path.exits(model_folder_path):
-            os.makedirs(model_folder_path)
-
-        file_name = os.path.join(model_folder_path, file_name)
-        torch.save(self.state_dict(), file_name)
 
 
 class QTrainer:
