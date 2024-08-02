@@ -147,7 +147,7 @@ def train():
                 print(
                     f"Game #{agent.num_games} - Score: {score}, Highest Score: {max_score} | "
                     f"Length: {len(snake) - 1}, Highest Length: {max_length} | "
-                    f"Time Steps: {time_steps}, Highest Time Steps: {max_time_steps}\n"
+                    f"Time Steps: {time_steps}, Highest Time Steps: {max_time_steps}"
                 )
 
                 plot_scores.append(score)
