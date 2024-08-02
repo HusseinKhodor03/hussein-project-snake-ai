@@ -1,4 +1,5 @@
 import torch
+import pygame
 import random
 import numpy as np
 from collections import deque
@@ -112,66 +113,71 @@ def train():
     agent = Agent()
     game = SnakeGameAI()
 
-    while True:
-        state_old = agent.get_state(game)
+    try:
+        while True:
+            state_old = agent.get_state(game)
 
-        final_move = agent.get_action(state_old)
+            final_move = agent.get_action(state_old)
 
-        reward, game_over, score, snake, time_steps = game.play_step(final_move)
-        state_new = agent.get_state(game)
+            reward, game_over, score, snake, time_steps = game.play_step(
+                final_move
+            )
+            state_new = agent.get_state(game)
 
-        agent.train_short_memory(
-            state_old, final_move, reward, state_new, game_over
-        )
-
-        agent.remember(state_old, final_move, reward, state_new, game_over)
-
-        if game_over:
-            game.reset()
-            agent.num_games += 1
-            agent.train_long_memory()
-
-            if score > max_score:
-                max_score = score
-
-            if len(snake) - 1 > max_length:
-                max_length = len(snake) - 1
-
-            if time_steps > max_time_steps:
-                max_time_steps = time_steps
-
-            print(
-                f"Game #{agent.num_games} - Score: {score}, Highest Score: {max_score} | "
-                f"Length: {len(snake) - 1}, Highest Length: {max_length} | "
-                f"Time Steps: {time_steps}, Highest Time Steps: {max_time_steps}\n"
+            agent.train_short_memory(
+                state_old, final_move, reward, state_new, game_over
             )
 
-            plot_scores.append(score)
-            total_score += score
+            agent.remember(state_old, final_move, reward, state_new, game_over)
 
-            mean_score = total_score / agent.num_games
-            plot_mean_scores.append(mean_score)
+            if game_over:
+                game.reset()
+                agent.num_games += 1
+                agent.train_long_memory()
 
-            plot_lengths.append(len(snake) - 1)
-            total_length += len(snake) - 1
+                if score > max_score:
+                    max_score = score
 
-            mean_length = total_length / agent.num_games
-            plot_mean_lengths.append(mean_length)
+                if len(snake) - 1 > max_length:
+                    max_length = len(snake) - 1
 
-            plot_time_steps.append(time_steps)
-            total_time_steps += time_steps
+                if time_steps > max_time_steps:
+                    max_time_steps = time_steps
 
-            mean_time_steps = total_time_steps / agent.num_games
-            plot_mean_time_steps.append(mean_time_steps)
+                print(
+                    f"Game #{agent.num_games} - Score: {score}, Highest Score: {max_score} | "
+                    f"Length: {len(snake) - 1}, Highest Length: {max_length} | "
+                    f"Time Steps: {time_steps}, Highest Time Steps: {max_time_steps}\n"
+                )
 
-            plot(
-                plot_scores,
-                plot_mean_scores,
-                plot_lengths,
-                plot_mean_lengths,
-                plot_time_steps,
-                plot_mean_time_steps,
-            )
+                plot_scores.append(score)
+                total_score += score
+
+                mean_score = total_score / agent.num_games
+                plot_mean_scores.append(mean_score)
+
+                plot_lengths.append(len(snake) - 1)
+                total_length += len(snake) - 1
+
+                mean_length = total_length / agent.num_games
+                plot_mean_lengths.append(mean_length)
+
+                plot_time_steps.append(time_steps)
+                total_time_steps += time_steps
+
+                mean_time_steps = total_time_steps / agent.num_games
+                plot_mean_time_steps.append(mean_time_steps)
+
+                plot(
+                    plot_scores,
+                    plot_mean_scores,
+                    plot_lengths,
+                    plot_mean_lengths,
+                    plot_time_steps,
+                    plot_mean_time_steps,
+                )
+    except pygame.error:
+        return
 
 
 if __name__ == "__main__":
